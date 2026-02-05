@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>For You 💗</title>
+
+<style>
+body {
+  margin: 0;
+  font-family: 'Segoe UI', sans-serif;
+  background: linear-gradient(135deg, #ffd6e8, #fff1f7);
+  overflow: hidden;
+}
+
+section {
+  min-height: 100vh;
+  display: none;
+  text-align: center;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+section.active {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: fadeIn 1s ease;
+}
+
+.card {
+  background: rgba(255,255,255,0.92);
+  border-radius: 24px;
+  padding: 22px;
+  max-width: 420px;
+  width: 100%;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+}
+
+h1, h2 {
+  color: #ff4d6d;
+  margin: 10px 0;
+}
+
+p {
+  color: #444;
+  font-size: 17px;
+  margin: 8px 0;
+}
+
+video {
+  width: 100%;
+  max-height: 55vh;
+  object-fit: contain;
+  border-radius: 18px;
+  margin: 12px 0;
+}
+
+#danceStep video {
+  max-height: 80vh;
+  width: auto;
+}
+
+button {
+  padding: 12px 22px;
+  font-size: 18px;
+  border: none;
+  border-radius: 30px;
+  margin: 8px;
+  cursor: pointer;
+  transition: 0.25s ease;
+}
+
+.yes {
+  background: #ff4d6d;
+  color: white;
+}
+
+.yes:hover {
+  transform: scale(1.08);
+  box-shadow: 0 0 15px rgba(255,77,109,0.6);
+}
+
+.no {
+  background: #ccc;
+  position: absolute;
+}
+
+img {
+  width: 240px;
+  border-radius: 18px;
+  margin: 15px 0;
+}
+
+/* Final message */
+.final-message {
+  animation: slideUp 1.4s ease;
+}
+
+.final-message h1 {
+  font-size: 34px;
+}
+
+.final-message p {
+  font-size: 20px;
+  margin-top: 12px;
+}
+
+/* Hearts */
+.heart {
+  position: fixed;
+  pointer-events: none;
+  animation: floatUp 3s linear forwards;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(15px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(40px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes floatUp {
+  to {
+    transform: translateY(-100px);
+    opacity: 0;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<!-- STEP 1: APOLOGY -->
+<section id="step1" class="active">
+  <div class="card">
+    <h1>I’m Sorry 💗</h1>
+    <p>I know I’m late… but you truly mean everything to me.</p>
+
+    <video controls>
+      <source src="sorry.mp4" type="video/mp4">
+    </video>
+
+    <h2>Will you accept my apology?</h2>
+    <button class="yes" onclick="goToDance()">Yes 🥺</button>
+    <button class="no" onmouseenter="moveButton(this)">No 😤</button>
+  </div>
+</section>
+
+<!-- STEP 2 & 4: DANCE -->
+<section id="danceStep">
+  <video id="danceVideo" autoplay controls>
+    <source src="dance.mp4" type="video/mp4">
+  </video>
+</section>
+
+<!-- STEP 3: VALENTINE -->
+<section id="step3">
+  <div class="card">
+    <h1>One Last Question 💖</h1>
+
+    <img id="slideshow" src="pic1.jpg">
+
+    <h2>Will you be my Valentine?</h2>
+    <button class="yes" onclick="finalDance()">YES 💍</button>
+    <button class="no" onmouseenter="moveButton(this)">No 🙄</button>
+  </div>
+</section>
+
+<!-- STEP 5: FINAL MESSAGE -->
+<section id="final">
+  <div class="final-message">
+    <h1>Thank you for being my Valentine 💖</h1>
+    <p>I love you so much</p>
+    <p>And I promise to be yours forever ❤️</p>
+  </div>
+</section>
+
+<script>
+// Runaway NO button
+function moveButton(btn) {
+  const x = Math.random() * (window.innerWidth - btn.offsetWidth);
+  const y = Math.random() * (window.innerHeight - btn.offsetHeight);
+  btn.style.left = x + "px";
+  btn.style.top = y + "px";
+}
+
+// Show section
+function showSection(id) {
+  document.querySelectorAll("section").forEach(s => s.classList.remove("active"));
+  document.getElementById(id).classList.add("active");
+}
+
+// Step logic
+function goToDance() {
+  showSection("danceStep");
+  const vid = document.getElementById("danceVideo");
+  vid.currentTime = 0;
+  vid.play();
+  vid.onended = () => showSection("step3");
+}
+
+function finalDance() {
+  showSection("danceStep");
+  const vid = document.getElementById("danceVideo");
+  vid.currentTime = 0;
+  vid.play();
+  vid.onended = () => showSection("final");
+}
+
+// Slideshow
+const slides = ["pic1.jpg", "pic2.jpg", "gif1.gif", "gif2.gif"];
+let index = 0;
+setInterval(() => {
+  const img = document.getElementById("slideshow");
+  if (img) {
+    index = (index + 1) % slides.length;
+    img.src = slides[index];
+  }
+}, 2500);
+
+// Cursor hearts
+document.addEventListener("mousemove", e => {
+  const heart = document.createElement("div");
+  heart.className = "heart";
+  heart.innerHTML = "💗";
+  heart.style.left = e.clientX + "px";
+  heart.style.top = e.clientY + "px";
+  document.body.appendChild(heart);
+  setTimeout(() => heart.remove(), 3000);
+});
+</script>
+
+</body>
+</html>
